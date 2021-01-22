@@ -185,6 +185,45 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+      #In the A star algorithm we are working in a similar way to the UCS
+    #But now for cost we are having the cost + heuristic combined
+    prior_que=util.PriorityQueue()
+    visited=dict()
+
+    state=problem.getStartState()
+    nd={}
+    nd["pred"]=None
+    nd["act"]=None
+    nd["state"]=state
+    nd["cost"]=0
+    nd["eq"]=heuristic(state,problem)
+    prior_que.push(nd,nd["cost"]+nd["eq"])
+
+    while not prior_que.isEmpty():
+        nd=prior_que.pop()
+        state=nd["state"]
+        cost=nd["cost"]
+        v=nd["eq"]
+                                                                                
+        if state in visited:                                              
+            continue
+        visited[state]=True
+        if problem.isGoalState(state)==True:
+            break
+        for suc in problem.getSuccessors(state):
+            if not suc[0] in visited:
+                new_nd={}
+                new_nd["pred"]=nd
+                new_nd["state"]=suc[0]
+                new_nd["act"]=suc[1]
+                new_nd["cost"]=suc[2] + cost
+                new_nd["eq"]=heuristic(new_nd["state"],problem)
+                prior_que.push(new_nd,new_nd["cost"]+new_nd["eq"])
+    actions= []
+    while nd["act"]!=None:
+        actions.insert(0,nd["act"])
+        nd=nd["pred"]
+    return actions
     util.raiseNotDefined()
 
 
