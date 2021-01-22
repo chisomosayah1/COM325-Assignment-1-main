@@ -112,6 +112,27 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+     #the same thing we're doing with DFS but here we are using
+     #queue instead of stack to build the path according to BFS logic
+     #Queue works on the principle of First-in first-out(FIFO)
+     #eg pop will remove the first node that was pushed into the list, (instead of last node as in STACK)
+    queue=util.Queue() # initialise an empty queue
+    visited=[]        #list of visted states                                              
+    startNode=(problem.getStartState(),[])   # initial/start state is current state, the list(path) is empty here                        
+    queue.push(startNode) 
+    while not queue.isEmpty():
+        popped=queue.pop()
+        location=popped[0]
+        path=popped[1]
+        if location not in visited:
+            visited.append(location)
+            if problem.isGoalState(location):
+                return path
+            successors=problem.getSuccessors(location) 
+            for suc in list(successors):
+                if suc[0] not in visited:
+                    queue.push((suc[0],path + [suc[1]]))
+    return []
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
