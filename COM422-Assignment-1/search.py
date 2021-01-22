@@ -138,6 +138,41 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    # UCS is general graph search with the PriorityQueue sorting by the cost as the data structure
+     # The cost for UCS only the backward cost
+    Pr_q=util.PriorityQueue() # Construct an empty priority queue that sorts using this backwards cost
+    visited=dict() #create a dictionary of all the visted nodes
+    state=problem.getStartState()
+    nd = {}
+    nd["pred"]=None                                                             
+    nd["act"]=None                                                              
+    nd["state"]=state
+    nd["cost"]=0
+    Pr_q.push(nd,nd["cost"])
+
+    while not Pr_q.isEmpty():
+        nd=Pr_q.pop()
+        state=nd["state"]
+        cost=nd["cost"]
+
+        if state in visited:
+            continue
+        visited[state]=True
+        if problem.isGoalState(state)==True:
+            break
+        for suc in problem.getSuccessors(state):
+            if not suc[0] in visited:
+                new_nd={}
+                new_nd["pred"]=nd
+                new_nd["state"]=suc[0]
+                new_nd["act"]=suc[1]
+                new_nd["cost"]=suc[2]+cost
+                Pr_q.push(new_nd,new_nd["cost"])
+    actions=[]
+    while nd["act"] !=None:
+        actions.insert(0,nd["act"])
+        nd=nd["pred"]
+    return actions
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
